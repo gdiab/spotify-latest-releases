@@ -12,7 +12,7 @@
 
 <template>
   <footer class="Footer">
-    <a href="https://danieldiekmeier.de/impressum.html">Impressum</a>
+    <a href="https://twitter.com/geediab">George Diab</a>
   </footer>
 </template>
 
