@@ -89,14 +89,14 @@
 
         const service = Service(this.token)
 
-        this.state = 'Loading all your artists'
-        const artists = await service.getFollowedArtists()
+        this.state = 'Loading all the new albums'
+        const albums = await service.getNewReleases()
 
-        this.state = `Loading the latest albums of your ${artists.length} artists`
-        const albumIds = await service.getAlbumIds(artists)
+        //this.state = `Loading the latest albums of your ${artists.length} artists`
+        //const albumIds = await service.getAlbumIds(artists)
 
-        this.state = `Loading the dates of ${albumIds.length} albums`
-        const albums = await service.getAlbumInformation(albumIds)
+        //this.state = `Loading the dates of ${albumIds.length} albums`
+        //const albums = await service.getAlbumInformation(albumIds)
 
         this.state = 'Almost done'
         const realAlbums = service.transformAlbums(albums)

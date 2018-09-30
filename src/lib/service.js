@@ -47,8 +47,16 @@ function Api (token) {
   return {
     getFollowedArtists (_params) {
       const params = Object.assign({}, _params, { type: 'artist' })
-      
+
       return load('https://api.spotify.com/v1/me/following', {
+        params
+      })
+    },
+
+    getNewReleases (_params) {
+      const params = Object.assign({}, _params)
+      
+      return load('https://api.spotify.com/v1/browse/new-releases', {
         params
       })
     },
@@ -93,6 +101,23 @@ export default function Service (TOKEN) {
     } else {
       return artists
     }
+  }
+
+  async function getNewReleases (after) {
+    const limit = 20
+
+    const response = await spotifyApi.getNewReleases({ limit, after })
+    console.log('data: %j', response.data.albums.items);
+    //const nextAfter = response.data.albums.next
+    const albums = response.data.albums.items
+    console.log('next after: %j', response.data.albums.next);
+
+    return albums
+    // if (nextAfter) {
+    //   return [].concat(albums, await getNewReleases(nextAfter))
+    // } else {
+    //   return albums
+    // }
   }
 
   async function getAlbumIds (artists) {
@@ -151,6 +176,7 @@ export default function Service (TOKEN) {
   return {
     getFollowedArtists,
     getAlbumIds,
+    getNewReleases,
     getAlbumInformation,
     transformAlbums,
     orderAlbums
