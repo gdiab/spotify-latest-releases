@@ -47,7 +47,7 @@ function Api (token) {
   return {
     getFollowedArtists (_params) {
       const params = Object.assign({}, _params, { type: 'artist' })
-
+      
       return load('https://api.spotify.com/v1/me/following', {
         params
       })
@@ -100,7 +100,7 @@ export default function Service (TOKEN) {
       return spotifyApi.getArtistAlbums(artist.id, {
         limit: 5,
         album_type: 'album,single',
-        country: 'DE'
+        country: 'US'
       })
     })
 
