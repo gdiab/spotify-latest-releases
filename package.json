@@ -6,7 +6,8 @@
   "scripts": {
     "webpack:serve": "webpack-dev-server --hot",
     "build": "rm -rf ./dist && NODE_ENV=production webpack -p",
-    "start": "node src/app.js"
+    "start": "node src/app.js",
+    "heroku-postbuild": "yarn build"
   },
   "babel": {
     "presets": [
