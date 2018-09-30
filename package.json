@@ -6,7 +6,8 @@
   "node": "8.0.0",
   "scripts": {
     "webpack:serve": "webpack-dev-server --hot",
-    "build": "rm -rf ./dist && NODE_ENV=production webpack -p"
+    "build": "rm -rf ./dist && NODE_ENV=production webpack -p",
+    "start": "node src/app.js"
   },
   "babel": {
     "presets": [
