@@ -90,8 +90,8 @@ export default function Service (TOKEN) {
 
   async function getFollowedArtists (after) {
     const limit = 50
-
-    const response = await spotifyApi.getFollowedArtists({ limit, after })
+    const country = 'US'
+    const response = await spotifyApi.getFollowedArtists({ limit, country, after })
 
     const nextAfter = response.data.artists.cursors.after
     const artists = response.data.artists.items
@@ -103,21 +103,25 @@ export default function Service (TOKEN) {
     }
   }
 
-  async function getNewReleases (after) {
-    const limit = 20
-
-    const response = await spotifyApi.getNewReleases({ limit, after })
+  async function getNewReleases (after, offset) {
+    offset = offset || 0
+    const limit = 50
+    const response = await spotifyApi.getNewReleases({ limit, offset, after })
     console.log('data: %j', response.data.albums.items);
-    //const nextAfter = response.data.albums.next
+    const nextAfter = response.data.albums.next
     const albums = response.data.albums.items
-    console.log('next after: %j', response.data.albums.next);
+    console.log('next offset: %j', offset);
+    console.log('next url: %j', nextAfter);
+    console.log('albums.length: ', albums.length);
 
-    return albums
-    // if (nextAfter) {
-    //   return [].concat(albums, await getNewReleases(nextAfter))
-    // } else {
-    //   return albums
-    // }
+
+    //return albums
+    if (offset == 0) {
+      offset = 50
+      return [].concat(albums, await getNewReleases(nextAfter, offset))
+    } else {
+      return albums
+    }
   }
 
   async function getAlbumIds (artists) {
