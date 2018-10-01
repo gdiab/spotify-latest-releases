@@ -3,6 +3,7 @@ const webpack = require('webpack')
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CompressionPlugin = require('compression-webpack-plugin')
+const Dotenv = require('dotenv-webpack');
 
 const env = process.env.NODE_ENV || 'development'
 
