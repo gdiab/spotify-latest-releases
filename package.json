@@ -7,7 +7,7 @@
   "scripts": {
     "webpack:serve": "webpack-dev-server --hot",
     "build": "rm -rf ./dist && NODE_ENV=production webpack -p",
-    "start": "node src/app.js"
+    "start": "yarn build && node src/app.js"
   },
   "babel": {
     "presets": [
@@ -34,6 +34,8 @@
     "bluebird": "^3.5.0",
     "compression-webpack-plugin": "^0.4.0",
     "css-loader": "^0.28.1",
+    "dotenv": "^6.0.0",
+    "dotenv-webpack": "^1.5.7",
     "html-webpack-plugin": "^2.28.0",
     "koa": "^2.2.0",
     "koa-router": "^7.1.1",
