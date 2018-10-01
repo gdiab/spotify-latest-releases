@@ -6,6 +6,6 @@ const clientConfig = require('./client');
 
 
 module.exports = Object.assign({
-  port: 5000,
+  port: process.env.PORT,
   clientSecret: process.env.SPOTIFY_CLIENT_SECRET
 }, clientConfig)
