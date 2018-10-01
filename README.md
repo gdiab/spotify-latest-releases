@@ -1,6 +1,6 @@
 # Spotify Latest Releases
 
-### Go to [spotify.danieldiekmeier.de](https://spotify.danieldiekmeier.de/) to try it yourself!
+### Go to [this website](https://pure-springs-36036.herokuapp.com/) to try it yourself!
 
 List the latest albums of your followed artists in chronological order.
 
