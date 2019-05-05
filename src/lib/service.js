@@ -201,17 +201,20 @@ export default function Service (TOKEN) {
 
 
     console.log('data.items: %j', response.data.items);
-    const nextAfter = response.data.albums.next
-    // const albums = response.data.albums.items
+    console.log('data: %j', response.data);
+    const nextAfter = response.data.next
+
+    const albums = await getAlbumIds(response.data.items);
+    console.log('albums? : %j', albums);
     console.log('next offset: %j', offset);
     console.log('next url: %j', nextAfter);
     // console.log('albums.length: ', albums.length);
 
 
     //return albums
-    if (offset == 0) {
+    if (offset == 0 && nextAfter) {
       offset = 50
-      return [].concat(albums, await getNewReleases(nextAfter, offset))
+      return [].concat(albums, await getNewReleasesV2(nextAfter, offset))
     } else {
       return albums
     }
@@ -219,16 +222,18 @@ export default function Service (TOKEN) {
 
   async function getAlbumIds (artists) {
     const allAlbumsDataArray = await bluebird.map(artists, artist => {
+      console.log('getAlbumIds::artist: ', artist);
       return spotifyApi.getArtistAlbums(artist.id, {
         limit: 5,
         album_type: 'album,single',
         country: 'US'
       })
     })
+    console.log('allAlbumsDataArray.data.items: %j', allAlbumsDataArray);
+    const allAlbumIds = unpackArray(allAlbumsDataArray, response => response.data.items)
 
-    const allAlbums = unpackArray(allAlbumsDataArray, response => response.data.items)
-
-    return allAlbums.map(album => album.id)
+    const allAlbums = await getAlbumInformation(allAlbumIds.map(album => album.id));
+    return allAlbums;
   }
 
   async function getAlbumInformation (albumIds) {
