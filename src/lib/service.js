@@ -32,6 +32,7 @@ function Api (token) {
     // or until we get an error that's not 429
 
     try {
+      console.log('options: ', options);
       return await http.get(url, options)
     } catch (err) {
       if (err.response.status === 429) {
@@ -57,6 +58,30 @@ function Api (token) {
       const params = Object.assign({}, _params)
       
       return load('https://api.spotify.com/v1/browse/new-releases', {
+        params
+      })
+    },
+
+    getTopReleasesLongTerm (_params) {
+      const params = Object.assign({}, _params, { time_range: 'long_term' })
+      
+      return load('https://api.spotify.com/v1/me/top/artists', {
+        params
+      })
+    },
+
+    getTopReleasesMediumTerm (_params) {
+      const params = Object.assign({}, _params)
+      
+      return load('https://api.spotify.com/v1/me/top/artists?time_range=medium_term', {
+        params
+      })
+    },
+
+    getTopReleasesShortTerm (_params) {
+      const params = Object.assign({}, _params)
+      
+      return load('https://api.spotify.com/v1/me/top/artists?time_range=short_term', {
         params
       })
     },
@@ -87,7 +112,7 @@ function wait (s) {
 
 export default function Service (TOKEN) {
   const spotifyApi = Api(TOKEN)
-
+  // console.log('spotifyApi: ', spotifyApi);
   async function getFollowedArtists (after) {
     const limit = 50
     const country = 'US'
@@ -103,6 +128,51 @@ export default function Service (TOKEN) {
     }
   }
 
+  async function getTopReleasesMediumTerm (after) {
+    const limit = 50
+    const country = 'US'
+    const response = await spotifyApi.getFollowedArtists({ limit, country, after })
+
+    const nextAfter = response.data.artists.cursors.after
+    const artists = response.data.artists.items
+
+    if (nextAfter) {
+      return [].concat(artists, await getFollowedArtists(nextAfter))
+    } else {
+      return artists
+    }
+  }
+
+  async function getTopReleasesLongTerm (after) {
+    const limit = 50
+    const country = 'US'
+    const response = await spotifyApi.getTopReleasesLongTerm({ limit, country, after })
+
+    const nextAfter = response.data.artists.cursors.after
+    const artists = response.data.artists.items
+
+    if (nextAfter) {
+      return [].concat(artists, await getTopReleasesLongTerm(nextAfter))
+    } else {
+      return artists
+    }
+  }
+
+  async function getTopReleasesShortTerm (after) {
+    const limit = 50
+    const country = 'US'
+    const response = await spotifyApi.getTopReleasesShortTerm({ limit, country, after })
+
+    const nextAfter = response.data.artists.cursors.after
+    const artists = response.data.artists.items
+
+    if (nextAfter) {
+      return [].concat(artists, await getTopReleasesShortTerm(nextAfter))
+    } else {
+      return artists
+    }
+  }
+
   async function getNewReleases (after, offset) {
     offset = offset || 0
     const limit = 50
@@ -113,6 +183,29 @@ export default function Service (TOKEN) {
     console.log('next offset: %j', offset);
     console.log('next url: %j', nextAfter);
     console.log('albums.length: ', albums.length);
+
+
+    //return albums
+    if (offset == 0) {
+      offset = 50
+      return [].concat(albums, await getNewReleases(nextAfter, offset))
+    } else {
+      return albums
+    }
+  }
+
+  async function getNewReleasesV2 (after, offset) {
+    offset = offset || 0
+    const limit = 50
+    const response = await spotifyApi.getTopReleasesLongTerm({ limit, offset, after })
+
+
+    console.log('data.items: %j', response.data.items);
+    const nextAfter = response.data.albums.next
+    // const albums = response.data.albums.items
+    console.log('next offset: %j', offset);
+    console.log('next url: %j', nextAfter);
+    // console.log('albums.length: ', albums.length);
 
 
     //return albums
@@ -181,6 +274,10 @@ export default function Service (TOKEN) {
     getFollowedArtists,
     getAlbumIds,
     getNewReleases,
+    getNewReleasesV2,
+    getTopReleasesMediumTerm,
+    getTopReleasesLongTerm,
+    getTopReleasesShortTerm,
     getAlbumInformation,
     transformAlbums,
     orderAlbums

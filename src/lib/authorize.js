@@ -1,7 +1,7 @@
 import SpotifyWebApi from 'spotify-web-api-node'
 import clientConfig from '../../config/client'
 
-const scopes = ['user-follow-read']
+const scopes = ['user-follow-read', 'user-top-read']
 const state = 'my state'
 
 export function getUrl () {

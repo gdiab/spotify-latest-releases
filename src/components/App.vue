@@ -90,7 +90,7 @@
         const service = Service(this.token)
 
         this.state = 'Loading all the new albums'
-        const albums = await service.getNewReleases()
+        const albums = await service.getNewReleasesV2()
 
         //this.state = `Loading the latest albums of your ${artists.length} artists`
         //const albumIds = await service.getAlbumIds(artists)
