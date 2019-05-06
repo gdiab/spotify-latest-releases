@@ -222,14 +222,14 @@ export default function Service (TOKEN) {
 
   async function getAlbumIds (artists) {
     const allAlbumsDataArray = await bluebird.map(artists, artist => {
-      console.log('getAlbumIds::artist: ', artist);
+      //console.log('getAlbumIds::artist: ', artist);
       return spotifyApi.getArtistAlbums(artist.id, {
         limit: 5,
         album_type: 'album,single',
         country: 'US'
       })
     })
-    console.log('allAlbumsDataArray.data.items: %j', allAlbumsDataArray);
+    //console.log('allAlbumsDataArray.data.items: %j', allAlbumsDataArray);
     const allAlbumIds = unpackArray(allAlbumsDataArray, response => response.data.items)
 
     const allAlbums = await getAlbumInformation(allAlbumIds.map(album => album.id));
@@ -243,6 +243,8 @@ export default function Service (TOKEN) {
     const albumDataArray = await bluebird.map(chunks, albumIds => {
       return spotifyApi.getAlbums(albumIds)
     })
+
+    console.log('getAlbumInformation::albums: %j', albumDataArray);
 
     // returns [[20 Albums], [20 Albums]]
     const albums = unpackArray(albumDataArray, response => response.data.albums)
